@@ -1,14 +1,39 @@
 <head>
-  <title>we-are-pareddit</title>
+  <title>We Are Pareddit</title>
 </head>
 
 <body>
   <h1>Welcome to Meteor!</h1>
+  
+  <div style="float: right;">
+  <a class="twitter-timeline" href="https://twitter.com/hashtag/weareparis" data-widget-id="671438280211173377">#weareparis Tweets</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </div>
 
-  {{> hello}}
+  {{> loginButtons}}<br/>
+  
+  {{> newTopic}}
+  
+  {{> topiclist}}
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="newTopic">
+  <form>
+    <input type="text" name="topicTitle"/><br/>
+    <textarea name="topicDescription"></textarea><br/>
+    <input type="submit" value="Add Topic"/>
+  </form>
+</template>
+
+<template name="topiclist">
+  {{#each topic}}
+    {{> topicview}}
+  {{/each}}
+</template>
+
+<template name="topicview">
+  <h4>{{title}} - ({{dislikes}})  <input type="button" class="dislike" value="👎">
+  								  <input type="button" class="like" value="👍"></h4>
+  <p>{{description}}</p>
+  <input type="button" class="remove" value="Remove Topic">
 </template>
