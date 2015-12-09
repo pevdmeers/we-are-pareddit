@@ -2,14 +2,21 @@
 * {
 	box-sizing: border-box;
 }
+div.map_canvas {
+	width: 600px;
+ 	height: 200px;
+ 	margin: 0 auto;
+}
 div.twitter {
 	float: right;
 	width: 300px;
 }
-.hidden {
+div.topic.hidden,
+div.topicForm.hidden {
 	display: none;
 }
-div.topic {
+div.topic,
+div.topicForm {
 	display: block;
 	border: solid #aaa 1px;
 	padding: 15px;

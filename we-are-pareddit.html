@@ -26,16 +26,20 @@
 </template>
 
 <template name="editTopic">
-  <form class="edit hidden">
-		{{> editTopicForm}}
-    <input type="button" class="cancel" value="Cancel"/><input type="submit" value="Save"/>
-  </form>
+	<div class="topicForm hidden">
+		<form class="edit">
+			{{> editTopicForm}}
+			<input type="button" class="cancel" value="Cancel"/><input type="submit" value="Save"/>
+		</form>
+	</div>
 </template>
 
 <template name="editTopicForm">
-		<label for="topicTitle">Title:</label><input class="title" type="text" name="topicTitle" value="{{title}}"/><br/>
-		<label for="topicDescription">Description:</label><br/>
-		<textarea class="description" name="topicDescription" value="{{description}}"></textarea><br/>
+	<label for="topicTitle">Title:</label><input class="title" type="text" name="topicTitle" value="{{title}}"/><br/>
+	<label for="topicDescription">Description:</label><br/>
+	<textarea class="description" name="topicDescription" value="{{description}}"></textarea><br/>
+	<label for="location">Location:</label><input class="geo" type="text" name="location"/><input type="button" class="geo" value="Find!"/><br/>
+	<div class="map_canvas"></div>
 </template>
 
 <template name="topiclist">
