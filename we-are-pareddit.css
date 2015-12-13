@@ -1,4 +1,10 @@
-/* CSS declarations go here */
+body, html
+{
+	font-family: 'Montserrat', sans-serif;
+	color: white;
+	background: url("http://www.weareparis.be/wp-content/uploads/2015/09/beeld11.jpg");
+	background-size: cover;
+}
 * {
 	box-sizing: border-box;
 }
