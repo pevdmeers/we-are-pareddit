@@ -60,3 +60,16 @@ div.topic form textarea.description {
 	width: 600px;
 	height: 80px;
 }
+.lm-social-share-btn {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	color: transparent;
+	background-size: 20px 20px;
+}
+.lm-social-share-facebook {
+	background-image: url("img/fb.png");
+}
+.lm-social-share-twitter {
+	background-image: url("img/tw.png");
+}

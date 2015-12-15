@@ -1,23 +1,6 @@
 TopicList = new Mongo.Collection("topics");
 
 if (Meteor.isClient) {
-/*
-  // counter starts at 0
-  Session.setDefault('counter', 0);
-
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
-    }
-  });
-
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
-  */
 
 	Template.topiclist.helpers({
 		'topic': function() {
@@ -34,7 +17,19 @@ if (Meteor.isClient) {
 			} else {
 				return false;
 			}
-		}
+		},
+    'socialShareOpts': function() {
+      var opts = {
+        facebook: true,
+        twitter: true,
+        pinterest: false,
+        shareData: {
+          url: 'http://we-are-pareddit.com/?' + this._id
+        }
+      };
+      return opts;
+    }
+
 	});
 
 	Template.topicview.events({

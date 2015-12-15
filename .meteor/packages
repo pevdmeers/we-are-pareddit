@@ -21,3 +21,4 @@ insecure                # Allow all DB writes from clients (for prototyping)
 accounts-facebook
 accounts-ui
 accounts-password
+lukemadera:social-share
