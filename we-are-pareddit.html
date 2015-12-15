@@ -23,6 +23,7 @@
 	{{#if currentUser}}
 		{{> newTopic}}
 	{{/if}}
+
   {{> topiclist}}
 
   </body>
@@ -46,9 +47,9 @@
 </template>
 
 <template name="editTopicForm">
-	<label for="topicTitle">Title:</label><input class="title" type="text" name="topicTitle" value="{{title}}"/><br/>
+	<label for="topicTitle">Title:</label><input class="title" type="text" name="topicTitle" value="{{title}}" required/><br/>
 	<label for="topicDescription">Description:</label><br/>
-	<textarea class="description" name="topicDescription" value="{{description}}"></textarea><br/>
+	<textarea class="description" name="topicDescription" value="{{description}}" required ></textarea><br/>
 	<input type="checkbox" class="geoSwitch" name="geoswitch"/><label for="geoSwitch" style="width: 120px;">Add Location</label><br/>
 	<div class="geoDiv" style="display: none;">
 		<label for="location">Location:</label><input class="geo" type="text" name="location"/><input type="button" class="geo" value="Find!"/><br/>
@@ -67,7 +68,17 @@
 
 <template name="topicview">
 	<div class="topic">
-		<h4>{{title}} - ({{dislikes}})  <input type="button" class="dislike" value="👎"><input type="button" class="like" value="👍">{{#if currentUser}}<input type="button" class="edit" value="📝"><input type="button" class="remove" value="❌">{{/if}}</h4>
+		<h4>
+			{{title}} - ({{dislikes}})  
+			<input type="button" class="dislike" value="👎">
+			<input type="button" class="like" value="👍">
+			<input type="button" class="edit" value="📝">
+			<input type="button" class="remove" value="❌">
+			<input type="button" class="location" value="📍">
+		</h4>
 		<p>{{description}}</p>
+		<div class="geoDiv" style="display: none;">
+			<div class="map_canvas"></div>
+		</div>
 	</div>
 </template>

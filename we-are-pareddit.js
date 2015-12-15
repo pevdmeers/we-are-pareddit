@@ -25,11 +25,24 @@ if (Meteor.isClient) {
 		}
 	});
 
+
 	Template.topicview.events({
+		
+		'click h4 .location': function(event) {
+			var button = $(event.target);
+			var geoDiv = button.parent().nextAll("div.geoDiv");
+			var canvas = geoDiv.children("div.map_canvas")[0];
+			$(geoDiv).show();
+			canvas.googleMap = createMap(canvas);
+			createMarkerOnMap(canvas.googleMap, this.location);		
+		},
+		
 		'click h4 .remove': function() {
 			console.log("removing " + this._id);
 			TopicList.remove(this._id);
 		},
+		
+		
 		'click h4 .edit': function(event) {
 			console.log("editing " + this._id);
 			var div = event.target.parentElement.parentElement;
@@ -44,6 +57,7 @@ if (Meteor.isClient) {
 			console.log("liking " + this._id);
 			TopicList.update(this._id, {$inc: {dislikes: +1} });
 		}
+		
 	});
 
 	Template.editTopicForm.events({
