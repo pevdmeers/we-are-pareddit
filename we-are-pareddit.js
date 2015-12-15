@@ -35,10 +35,6 @@ if (Meteor.isClient) {
 			var div = event.target.parentElement.parentElement;
 			$(div).addClass("hidden");
 			$(div).next("div.topicForm").removeClass("hidden");
-			var editCanvas = $(div).next("div.topicForm").find("div.map_canvas")[0];
-			editCanvas.googleMap = createMap(editCanvas);
-			editCanvas.googleMap.panTo(this.location);
-			createMarkerOnMap(editCanvas.googleMap, this.location);
 		},
 		'click h4 .dislike': function() {
 			console.log("disliking " + this._id);
@@ -50,19 +46,26 @@ if (Meteor.isClient) {
 		}
 	});
 
-	Template.newTopic.events({
+	Template.editTopicForm.events({
 		'click input[type=button].geo': function (event) {
 			var map = $(event.target).nextAll("div.map_canvas")[0];
 			var loc = $(event.target).prev("input[type=text].geo").val();
 			doGeocoding(map, loc);
+		}
+	});
+
+	Template.newTopic.events({
+		'change input.geoSwitch': function (event) {
+			showMap(event);
 		},
 		'submit form': function (event) {
 			event.preventDefault();
+			var canvas = $(event.target).find("div.map_canvas")[0];
 			TopicList.insert({
 				'title': event.target.topicTitle.value,
 				'description': event.target.topicDescription.value,
 				'dislikes': 0,
-				'location': $(event.target).find("div.map_canvas")[0].googleMap.currentLocation.toJSON()
+				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON()
 			});
 			event.target.topicTitle.value = "";
 			event.target.topicDescription.value = "";
@@ -70,18 +73,17 @@ if (Meteor.isClient) {
 	});
 
 	Template.editTopic.events({
-		'click input[type=button].geo': function (event) {
-			var map = $(event.target).nextAll("div.map_canvas")[0];
-			var loc = $(event.target).prev("input[type=text].geo").val();
-			doGeocoding(map, loc);
+		'change input.geoSwitch': function (event) {
+			showMap(event, this.location);
 		},
 		'submit form': function (event) {
 			event.preventDefault();
 			console.log("saving " + this._id);
+			var canvas = $(event.target).find("div.map_canvas")[0];
 			TopicList.update(this._id, {$set: {
 				'title': event.target.topicTitle.value,
 				'description': event.target.topicDescription.value,
-				'location': $(event.target).find("div.map_canvas")[0].googleMap.currentLocation.toJSON()
+				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON()
 			}});
 			var form = event.target;
 			$(form).parent().prev("div.topic").removeClass("hidden");
@@ -93,6 +95,24 @@ if (Meteor.isClient) {
 			$(form).parent().addClass("hidden");
 		}
 	});
+
+	function showMap(event, location) {
+		var checkbox = $(event.target);
+		var geoDiv = checkbox.nextAll("div.geoDiv");
+		var canvas = geoDiv.children("div.map_canvas")[0];
+		if (checkbox.prop('checked')) {
+			$(geoDiv).show();
+			canvas.googleMap = createMap(canvas);
+			if (location) {
+				createMarkerOnMap(canvas.googleMap, location);
+			} else {
+				getCurrentLocation(canvas.googleMap);
+			}
+		} else {
+			$(geoDiv).hide();
+			canvas.googleMap = undefined;
+		}
+	}
 
 	function createMap(mapDiv) {
 		mapDiv.geocoder = new google.maps.Geocoder();
@@ -186,12 +206,7 @@ if (Meteor.isClient) {
 
 	$.ajax({
 		url: "http://maps.google.com/maps/api/js?sensor=false",
-		dataType: "script",
-		success: function () {
-			var newTopicCanvas = $("form.new div.map_canvas")[0];
-			newTopicCanvas.googleMap = createMap(newTopicCanvas);
-			getCurrentLocation(newTopicCanvas.googleMap);
-		}
+		dataType: "script"
 	});
 }
 

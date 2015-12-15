@@ -20,19 +20,19 @@
 
   {{> loginButtons}}
 
-	{{> newTopic}}
+	{{#if currentUser}}
+		{{> newTopic}}
+	{{/if}}
   {{> topiclist}}
 
   </body>
 
 <template name="newTopic">
 	<div class="topic">
-		{{#if currentUser}}
 		<form class="new">
 			{{> editTopicForm}}
 			<input type="submit" value="Add Topic"/>
 		</form>
-		{{/if}}
 	</div>
 </template>
 
@@ -49,20 +49,25 @@
 	<label for="topicTitle">Title:</label><input class="title" type="text" name="topicTitle" value="{{title}}"/><br/>
 	<label for="topicDescription">Description:</label><br/>
 	<textarea class="description" name="topicDescription" value="{{description}}"></textarea><br/>
-	<label for="location">Location:</label><input class="geo" type="text" name="location"/><input type="button" class="geo" value="Find!"/><br/>
-	<div class="map_canvas"></div>
+	<input type="checkbox" class="geoSwitch" name="geoswitch"/><label for="geoSwitch" style="width: 120px;">Add Location</label><br/>
+	<div class="geoDiv" style="display: none;">
+		<label for="location">Location:</label><input class="geo" type="text" name="location"/><input type="button" class="geo" value="Find!"/><br/>
+		<div class="map_canvas"></div>
+	</div>
 </template>
 
 <template name="topiclist">
   {{#each topic}}
 		{{> topicview}}
-		{{> editTopic}}
+		{{#if currentUser}}
+			{{> editTopic}}
+		{{/if}}
   {{/each}}
 </template>
 
 <template name="topicview">
 	<div class="topic">
-		<h4>{{title}} - ({{dislikes}})  <input type="button" class="dislike" value="👎"><input type="button" class="like" value="👍"><input type="button" class="edit" value="📝"><input type="button" class="remove" value="❌"></h4>
+		<h4>{{title}} - ({{dislikes}})  <input type="button" class="dislike" value="👎"><input type="button" class="like" value="👍">{{#if currentUser}}<input type="button" class="edit" value="📝"><input type="button" class="remove" value="❌">{{/if}}</h4>
 		<p>{{description}}</p>
 	</div>
 </template>
