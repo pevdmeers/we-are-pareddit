@@ -26,6 +26,17 @@ if (Meteor.isClient) {
 	});
 
 
+	Template.topicview.helpers({
+		'userIsOwner': function() {
+			var user = Meteor.user();
+			if (user) {
+				return this.user == user._id;
+			} else {
+				return false;
+			}
+		}
+	});
+
 	Template.topicview.events({
 		
 		'click h4 .location': function(event) {
@@ -79,7 +90,8 @@ if (Meteor.isClient) {
 				'title': event.target.topicTitle.value,
 				'description': event.target.topicDescription.value,
 				'dislikes': 0,
-				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON()
+				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON(),
+				'user': Meteor.user()._id
 			});
 			event.target.topicTitle.value = "";
 			event.target.topicDescription.value = "";

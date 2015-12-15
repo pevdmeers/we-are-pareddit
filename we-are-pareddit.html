@@ -60,9 +60,7 @@
 <template name="topiclist">
   {{#each topic}}
 		{{> topicview}}
-		{{#if currentUser}}
-			{{> editTopic}}
-		{{/if}}
+		{{> editTopic}}
   {{/each}}
 </template>
 
@@ -72,8 +70,10 @@
 			{{title}} - ({{dislikes}})  
 			<input type="button" class="dislike" value="👎">
 			<input type="button" class="like" value="👍">
+			{{#if userIsOwner}}
 			<input type="button" class="edit" value="📝">
 			<input type="button" class="remove" value="❌">
+			{{/if}}
 			<input type="button" class="location" value="📍">
 		</h4>
 		<p>{{description}}</p>
