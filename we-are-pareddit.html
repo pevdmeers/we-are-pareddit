@@ -25,6 +25,7 @@
 	{{/if}}
 
   {{> topiclist}}
+  {{> search}}
 
   </body>
 
@@ -63,6 +64,23 @@
 		{{> editTopic}}
   {{/each}}
 </template>
+
+<template name="search">  
+ 
+ <form id="search">
+    <input type="text" id="query" placeholder="Enter search terms here."/>
+    <button>Search</button>
+  </form>
+  <hr/> 
+<h1>Topics</h1>
+  <ol>
+    {{#each topiclist}}
+      <li>{{> topicview}}</li>
+    {{/each}}
+  </ol>
+
+</template>  
+
 
 <template name="topicview">
 	<div class="topic">

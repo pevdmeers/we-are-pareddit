@@ -230,10 +230,17 @@ if (Meteor.isClient) {
 		url: "http://maps.google.com/maps/api/js?sensor=false",
 		dataType: "script"
 	});
+	Template.search.events({
+    "submit #search": function (e) {
+      e.preventDefault();
+      Session.set("query", $("#query").val());
+    }
+  });
+
 	Template.search.helpers({
 	 topiclist: function() {
-    Meteor.subscribe("searchPosts", Session.get("searchValue"));
-    if (Session.get("searchValue")) {
+    Meteor.subscribe("search", Session.get("query"));
+    if (Session.get("query")) {
       return TopicList.find({}, { sort: [["score", "desc"]] });
     } else {
       return TopicList.find({});
@@ -249,9 +256,12 @@ if (Meteor.isServer) {
 	// voegt index toe, momenteel enkel op titel 
 	});
 
-	Meteor.publish('searchPosts', function(query) {
-  if (query) {
-    return TopicList.find(
+	Meteor.publish("search", function(query) {
+  if (!query) {
+    return TopicList.find({});
+     }
+     console.log("Searching for", query);
+     var cursor = TopicList.find(
       { $text: {
           $search: query
         }
@@ -269,9 +279,7 @@ if (Meteor.isServer) {
         }
       }
     );
-  } else {
-    return TopicList.find();
-  }
+     return cursor;
 
 });
 }
