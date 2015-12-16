@@ -24,7 +24,8 @@ if (Meteor.isClient) {
         twitter: true,
         pinterest: false,
         shareData: {
-          url: 'http://we-are-pareddit.com/?' + this._id
+          url: 'http://we-are-pareddit.com/?' + this._id,
+					defaultShareText: this.title + " - " + this.description
         }
       };
       return opts;
