@@ -83,3 +83,19 @@ h4 input[type=button] {
 	cursor: pointer;
 	display: inline-block;
 }
+
+@media (max-width:1200px){
+
+	div.twitter {
+		display: none;
+	}
+
+}
+
+@media (max-width: 480px){	
+
+	div.twitter {
+		display: inline;
+	}
+
+}	
