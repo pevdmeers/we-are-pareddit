@@ -73,3 +73,13 @@ div.topic form textarea.description {
 .lm-social-share-twitter {
 	background-image: url("img/tw.png");
 }
+h4 input[type=button] {
+	width: 20px;
+	height: 20px;
+	background:none!important;
+	border:none; 
+	padding:0!important;
+	font: inherit;
+	cursor: pointer;
+	display: inline-block;
+}
