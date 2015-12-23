@@ -1,31 +1,31 @@
 
-<head>
-  <title>We Are Pareddit</title>
-  <link rel="shortcut icon" href="http://www.weareparis.be/wp-content/uploads/2015/09/Favicon_WAP.gif" type="image/x-icon">
-  <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<head> 						
+  <title>We Are Pareddit</title>				<!--the tab-title, eiffel tower icon in tab and layout-->
+  <link rel="shortcut icon" href="http://www.weareparis.be/wp-content/uploads/2015/09/Favicon_WAP.gif" type="image/x-icon">		
+  <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>									
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">					
 </head>
 
 <body>
 
-  <div class="title">
+  <div class="title">				<!--title and intro of page-->
 	  <h1>We Are Pareddit</h1>
 	  <p>On this website people can come together and discuss about how to make the VUB (Vrije Universiteit Brussel) sustainable, closely related to the We Are Paris initiative.</p>
   </div>
 
-  <div class="twitter">
+  <div class="twitter"> 		<!--twitter widget-->
   	<a class="twitter-timeline" href="https://twitter.com/WeAreParis2015" data-widget-id="677129508416315393">Tweets door @WeAreParis2015</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </div>
 
-  {{> loginButtons}}
+  {{> loginButtons}}			<!--package for logging in-->
 
-	{{#if currentUser}}
-		{{> newTopic}}
+	{{#if currentUser}}			<!--making sure only logged in users can post-->
+		{{> newTopic}}			<!--template for new topic, defined further-->
 	{{/if}}
 
-	{{> search}}	
-  {{> topiclist}}
+	{{> search}}			<!--the search field, template defined further-->
+  {{> topiclist}}			<!--list of existing topics, defined further-->
   
   <footer>Made by Peter, Nico & Aline!</footer>
   </body>

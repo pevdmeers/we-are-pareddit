@@ -40,14 +40,14 @@ if (Meteor.isServer) {
 
 if (Meteor.isClient) {
 
-	Template.topiclist.helpers({
-		'topic': function() {
+	Template.topiclist.helpers({				//Topiclist helpers
+		'topic': function() {					//from each topic
 			return TopicList.find();
 		}
 	});
 
 
-	Template.topicview.helpers({
+	Template.topicview.helpers({				//topicview Helpers
 		'userIsOwner': function() {
 			var user = Meteor.user();
 			if (user) {
@@ -56,24 +56,24 @@ if (Meteor.isClient) {
 				return false;
 			}
 		},
-    'socialShareOpts': function() {
-      var opts = {
-        facebook: true,
-        twitter: true,
-        pinterest: false,
-        shareData: {
-          url: 'http://we-are-pareddit.com/?' + this._id,
-					defaultShareText: this.title + " - " + this.description
-        }
-      };
-      return opts;
+		'socialShareOpts': function() {
+			var opts = {
+			facebook: true,
+			twitter: true,
+			pinterest: false,
+			shareData: {
+			url: 'http://we-are-pareddit.com/?' + this._id,
+			defaultShareText: this.title + " - " + this.description
+        		}
+      		};
+      	return opts;
     }
 
 	});
 
-	Template.topicview.events({
+	Template.topicview.events({     		//topicview events
 		
-		'click h4 .location': function(event) {
+		'click h4 .location': function(event) {       //when location button is pressed, it shows the location
 			var button = $(event.target);
 			var geoDiv = button.parent().nextAll("div.geoDiv");
 			var canvas = geoDiv.children("div.map_canvas")[0];
@@ -82,38 +82,37 @@ if (Meteor.isClient) {
 			createMarkerOnMap(canvas.googleMap, this.location);		
 		},
 		
-		'click h4 .remove': function() {
+		'click h4 .remove': function() {			//when remove button is pressed, this deletes the topic, and logs it
 			console.log("removing " + this._id);
 			TopicList.remove(this._id);
 		},
 		
-		
-		'click h4 .edit': function(event) {
+		'click h4 .edit': function(event) {			//when edit button is pressed, this unhides the editTopic, and hides the topicview, and logs it
 			console.log("editing " + this._id);
 			var div = event.target.parentElement.parentElement;
 			$(div).addClass("hidden");
 			$(div).next("div.topicForm").removeClass("hidden");
 		},
-		'click h4 .dislike': function() {
+		'click h4 .dislike': function() {			//when dislike button is pressed, this lowers the score by one
 			console.log("disliking " + this._id);
 			TopicList.update(this._id, {$inc: {dislikes: -1} });
 		},
 		'click h4 .like': function() {
-			console.log("liking " + this._id);
+			console.log("liking " + this._id);		//when like button is pressed, this increases the score by one
 			TopicList.update(this._id, {$inc: {dislikes: +1} });
 		}
 		
 	});
 
-	Template.editTopicForm.events({
-		'click input[type=button].geo': function (event) {
+	Template.editTopicForm.events({					//editTopicForm events
+		'click input[type=button].geo': function (event) {		//when pressing the add location option, this shows the marked location so you can edit it
 			var map = $(event.target).nextAll("div.map_canvas")[0];
 			var loc = $(event.target).prev("input[type=text].geo").val();
 			doGeocoding(map, loc);
 		}
 	});
 
-	Template.newTopic.events({
+	Template.newTopic.events({						//newTopic
 		'change input.geoSwitch': function (event) {
 			showMap(event);
 		},
@@ -132,7 +131,7 @@ if (Meteor.isClient) {
 		}
 	});
 
-	Template.editTopic.events({
+	Template.editTopic.events({						//editTopic
 		'change input.geoSwitch': function (event) {
 			showMap(event, this.location);
 		},
@@ -156,14 +155,14 @@ if (Meteor.isClient) {
 		}
 	});
 	
-	Template.search.events({
+	Template.search.events({     					//search
     "submit #search": function (e) {
       e.preventDefault();
       Session.set("query", $("#query").val());
     }
   });
 
-	Template.search.helpers({
+	Template.search.helpers({ 						//search
 	 topiclist: function() {
     Meteor.subscribe("search", Session.get("query"));
     if (Session.get("query")) {
@@ -175,7 +174,7 @@ if (Meteor.isClient) {
 });
  
 
-	function showMap(event, location) {
+	function showMap(event, location) {			//maps
 		var checkbox = $(event.target);
 		var geoDiv = checkbox.nextAll("div.geoDiv");
 		var canvas = geoDiv.children("div.map_canvas")[0];
@@ -193,7 +192,7 @@ if (Meteor.isClient) {
 		}
 	}
 
-	function createMap(mapDiv) {
+	function createMap(mapDiv) {				//maps
 		mapDiv.geocoder = new google.maps.Geocoder();
 
 		if(mapDiv.options == undefined){
@@ -211,7 +210,7 @@ if (Meteor.isClient) {
 		return mapObj;
 	}
 
-	function createMarkerOnMap(mapObj, loc) {
+	function createMarkerOnMap(mapObj, loc) {				//maps
 			mapObj.marker && mapObj.marker.setMap && mapObj.marker.setMap(null);
 		  mapObj.marker = null;
 			mapObj.marker = new google.maps.Marker(
@@ -224,13 +223,13 @@ if (Meteor.isClient) {
 			mapObj.currentLocation = loc;
 	}
 
-	function createMarkerFunctionForMap(mapObj) {
+	function createMarkerFunctionForMap(mapObj) {		//maps
 		return function (event) {
 			createMarkerOnMap(mapObj, event.latLng);
 		};
 	}
 
-	function getCurrentLocation(map) {
+	function getCurrentLocation(map) {					//maps
 
 		var onError = function(error) {
 			alert("Could not get the current location.");
@@ -263,7 +262,7 @@ if (Meteor.isClient) {
 		}
 	}
 
-	function doGeocoding(map, loc){
+	function doGeocoding(map, loc){					//maps
 
 		var geocoderRequest = {
 			address: loc
@@ -283,12 +282,15 @@ if (Meteor.isClient) {
 		});
 	}
 
-	$.ajax({
+	$.ajax({										//ajax to make map dynamic
 		url: "http://maps.google.com/maps/api/js?sensor=false",
 		dataType: "script"
 	});
 
 }
+	
+
+
 	/*
 		 Meteor.startup(function () {
 	// code to run on server at startup
