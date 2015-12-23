@@ -6,7 +6,7 @@ if (Meteor.isServer) {
 		'description': 'text'
 	});
 
-	Meteor.publish("search", function(query) {
+	Meteor.publish("search", function(query) {	
   		if (!query) {
     		return TopicList.find({});
      	}
@@ -53,7 +53,7 @@ if (Meteor.isClient) {
 				return false;
 			}
 		},
-		'socialShareOpts': function() {			//Based on package socialShareOpts, 
+		'socialShareOpts': function() {			//Based on package lmSocialShare, 
 			var opts = {						//we edit it here to turn of pinterest, and give standard share info per topic
 			facebook: true,
 			twitter: true,
