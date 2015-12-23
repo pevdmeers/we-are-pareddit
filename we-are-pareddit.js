@@ -2,36 +2,34 @@ TopicList = new Mongo.Collection("topics");
 
 if (Meteor.isServer) {				
 	TopicList._ensureIndex({		// voegt index toe, voor search
-	'title': 'text',
-	'description': 'text'
+		'title': 'text',
+		'description': 'text'
 	});
 
 	Meteor.publish("search", function(query) {
-  if (!query) {
-    return TopicList.find({});
-     }
-     console.log("Searching for", query);
-     var cursor = TopicList.find(
-      { $text: {
-          $search: query
-        }
-      },
-      {
-        fields: {
-          score: {
-            $meta: 'textScore'
-          }
-        },
-        sort: {
-          score: {
-            $meta: 'textScore'
-          }
-        }
-      }
-    );
-     return cursor;
-
-});
+  		if (!query) {
+    		return TopicList.find({});
+     	}
+    	console.log("Searching for", query);
+    	var cursor = TopicList.find({ 
+    		$text: {
+        		$search: query
+        	}
+      	},
+      	{
+        	fields: {
+        		score: {
+            		$meta: 'textScore'
+          		}
+        	},
+        	sort: {
+          		score: {
+            		$meta: 'textScore'
+          		}
+        	}
+      	});
+     	return cursor;
+	});
 }
 
 
@@ -112,11 +110,11 @@ if (Meteor.isClient) {
 	});
 
 	Template.newTopic.events({								//newTopic events
-		'change input.geoSwitch': function (event) {    	//by clicking the checkbox, calls fucntion
+		'change input.geoSwitch': function (event) {    	//by clicking the checkbox, calls function
 			showMap(event);									//named function, shows the map to add a custom location
 		},
 		'submit form': function (event) {					//if form is submitted => function
-			event.preventDefault();							//stop standard submit function, instead do ...
+			event.preventDefault();							//stop standard submit function, instead, take specified information and store it
 			var canvas = $(event.target).find("div.map_canvas")[0];		
 			TopicList.insert({
 				'title': event.target.topicTitle.value,
@@ -125,16 +123,16 @@ if (Meteor.isClient) {
 				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON(),
 				'user': Meteor.user()._id
 			});
-			event.target.topicTitle.value = "";
+			event.target.topicTitle.value = "";				//clears the fields for the user
 			event.target.topicDescription.value = "";
 		}
 	});
 
-	Template.editTopic.events({						//editTopic
-		'change input.geoSwitch': function (event) {
+	Template.editTopic.events({								//editTopic
+		'change input.geoSwitch': function (event) {		//show map for the edit template
 			showMap(event, this.location);
 		},
-		'submit form': function (event) {
+		'submit form': function (event) {					//Same as newtopic, but no dislike reset, and owner stays the same
 			event.preventDefault();
 			console.log("saving " + this._id);
 			var canvas = $(event.target).find("div.map_canvas")[0];
@@ -143,26 +141,26 @@ if (Meteor.isClient) {
 				'description': event.target.topicDescription.value,
 				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON()
 			}});
-			var form = event.target;
-			$(form).parent().prev("div.topic").removeClass("hidden");
-			$(form).parent().addClass("hidden");
+			var form = event.target;								  		
+			$(form).parent().prev("div.topic").removeClass("hidden");	//unhides the view
+			$(form).parent().addClass("hidden");						//rehides the edit
 		},
-		'click .cancel': function (event) {
-			var form = event.target.parentElement;
+		'click .cancel': function (event) {								//Cancels the editting, 
+			var form = event.target.parentElement;						//does nothing but unhiding the view and hiding the edit
 			$(form).parent().prev("div.topic").removeClass("hidden");
 			$(form).parent().addClass("hidden");
 		}
 	});
 	
-	Template.search.events({     					//search
-    "submit #search": function (e) {
+	Template.search.events({     					//search on event of submtting a search
+    "submit #search": function (e) {				//takes query you filled in the search field and puts in the variable "query"
       e.preventDefault();
       Session.set("query", $("#query").val());
     }
   });
 
-	Template.search.helpers({ 						//search
-	 topiclist: function() {
+	Template.search.helpers({ 						//search helper function
+	 topiclist: function() {						//returns 
     Meteor.subscribe("search", Session.get("query"));
     if (Session.get("query")) {
       return TopicList.find({}, { sort: [["score", "desc"]] });
