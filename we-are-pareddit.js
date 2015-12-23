@@ -132,11 +132,11 @@ if (Meteor.isClient) {
 		'change input.geoSwitch': function (event) {		//show map for the edit template
 			showMap(event, this.location);
 		},
-		'submit form': function (event) {					//Same as newtopic, but no dislike reset, and owner stays the same
-			event.preventDefault();
+		'submit form': function (event) {					//Almost same as newtopic, but no dislike reset, and owner stays the same
+			event.preventDefault();							
 			console.log("saving " + this._id);
 			var canvas = $(event.target).find("div.map_canvas")[0];
-			TopicList.update(this._id, {$set: {
+			TopicList.update(this._id, {$set: {				//ueses update in stead of insert
 				'title': event.target.topicTitle.value,
 				'description': event.target.topicDescription.value,
 				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON()
@@ -189,7 +189,7 @@ if (Meteor.isClient) {
 		}
 	}
 
-	function createMap(mapDiv) {				//creates the map, straight from the class
+	function createMap(mapDiv) {				//creates the map, straight from the lecture
 		mapDiv.geocoder = new google.maps.Geocoder();
 
 		if(mapDiv.options == undefined){ 		// provide some default initialization options, if there are none defined
@@ -201,29 +201,30 @@ if (Meteor.isClient) {
 			};
 		}
 
-		var mapObj = new google.maps.Map(mapDiv, mapDiv.options);				//mapObj is variable for location on map user chooses
-		google.maps.event.addListener(mapObj, "click", createMarkerFunctionForMap(mapObj));			//calls upon the create marker function
-		return mapObj;
+		var mapObj = new google.maps.Map(mapDiv, mapDiv.options);				//here we initialize the map
+		google.maps.event.addListener(mapObj, "click", createMarkerFunctionForMap(mapObj));			//calls upon the create marker function when the map is clicked
+		return mapObj;												
 	}
 
-	function createMarkerOnMap(mapObj, loc) {				//maps
-			mapObj.marker && mapObj.marker.setMap && mapObj.marker.setMap(null);
-		  mapObj.marker = null;
-			mapObj.marker = new google.maps.Marker(
+	function createMarkerFunctionForMap(mapObj) {		//This function returns a function that uses the mapObj
+		return function (event) {						
+			createMarkerOnMap(mapObj, event.latLng);	//calls upon createMarkerOnMap
+		};
+	}
+
+	function createMarkerOnMap(mapObj, loc) {				//function to create marker
+			mapObj.marker && mapObj.marker.setMap && mapObj.marker.setMap(null); //reset existing marker links to map
+		  	mapObj.marker = null;												//deletes markers
+			mapObj.marker = new google.maps.Marker(								//makes new marker
 				{ 
 					map: mapObj,
 					position: loc,
 					title: "NEW MARKER"
 				});	
-			mapObj.panTo(loc);
+			mapObj.panTo(loc);								
 			mapObj.currentLocation = loc;
 	}
 
-	function createMarkerFunctionForMap(mapObj) {		//maps
-		return function (event) {
-			createMarkerOnMap(mapObj, event.latLng);
-		};
-	}
 
 	function getCurrentLocation(map) {					//maps
 
