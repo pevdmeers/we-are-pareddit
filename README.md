@@ -2,9 +2,9 @@ A functioning version of the site runs at http://peter.vdmr.be:3000/ (December 2
 
 Follow the instructions to run we-are-pareddit locally:
 
-1. Download meteor
-  In command line: type
-    curl https://install.meteor.com/ | sh
+1. Download meteor  
+  In command line: type  
+    curl https://install.meteor.com/ | sh  
   This will:
   1. Connect to ‘install.meteor.com’.
   2. Download the latest version of Meteor. 
