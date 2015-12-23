@@ -18,7 +18,7 @@
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   </div>
 
-  {{> loginButtons}}			<!--package for logging in-->
+  {{> loginButtons}}			<!--template from package "accounts-ui" for logging in-->
 
 	{{#if currentUser}}			<!--making sure only logged in users can post-->
 		{{> newTopic}}			<!--template for new topic, defined further-->
@@ -27,21 +27,21 @@
 	{{> search}}			<!--the search field, template defined further-->
   {{> topiclist}}			<!--list of existing topics, defined further-->
   
-  <footer>Made by Peter, Nico & Aline!</footer>
+ <footer>Made by Peter, Nico & Aline!</footer>  <!--footer tag to use HTML5 functionality of 'footer' tag-->
   </body>
 
-<template name="newTopic">
-	<div class="topic">
-		<form class="new">
-			{{> editTopicForm}}
-			<input type="submit" value="Add Topic"/>
+<template name="newTopic">      <!--template to add new topic-->
+	<div class="topic">			<!--layout-->
+		<form class="new">			
+			{{> editTopicForm}}  	<!--The edit topic form template-->
+			<input type="submit" value="Add Topic"/>   <!--add topic button-->
 		</form>
 	</div>
 </template>
 
 <template name="editTopic">
-	<div class="topicForm hidden">
-		<form class="edit">
+	<div class="topicForm hidden">    <!--Hides the editTopic as a standard-->
+		<form class="edit">				
 			{{> editTopicForm}}
 			<input type="button" class="cancel" value="Cancel"/><input type="submit" value="Save"/>
 		</form>
@@ -59,7 +59,7 @@
 	</div>
 </template>
 
-<template name="topiclist">
+<template name="topiclist">      <!--the entire list of existing topics, existing of topicview and editTopic (hidden) templates-->
   {{#each topic}}
 		{{> topicview}}
 		{{> editTopic}}

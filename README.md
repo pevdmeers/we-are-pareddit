@@ -1,2 +1,0 @@
-# we-are-pareddit
-test
