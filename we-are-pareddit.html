@@ -32,9 +32,9 @@
 
 <template name="newTopic">      <!--template to add new topic-->
 	<div class="topic">			<!--layout-->
-		<form class="new">			
+		<form class="new">		
 			{{> editTopicForm}}  	<!--The edit topic form template-->
-			<input type="submit" value="Add Topic"/>   <!--add topic button-->
+			<input type="submit" value="Add Topic"/>   <!--subject topic button-->
 		</form>
 	</div>
 </template>
@@ -42,13 +42,13 @@
 <template name="editTopic">
 	<div class="topicForm hidden">    <!--Hides the editTopic as a standard-->
 		<form class="edit">				
-			{{> editTopicForm}}
+			{{> editTopicForm}}			
 			<input type="button" class="cancel" value="Cancel"/><input type="submit" value="Save"/>
 		</form>
 	</div>
 </template>
 
-<template name="editTopicForm">
+<template name="editTopicForm">			
 	<label for="topicTitle">Title:</label><input class="title" type="text" name="topicTitle" value="{{title}}" required/><br/>
 	<label for="topicDescription">Description:</label><br/>
 	<textarea class="description" name="topicDescription" value="{{description}}" required ></textarea><br/>
@@ -66,14 +66,14 @@
   {{/each}}
 </template>
 
-<template name="search">  
+<template name="search">     <!--template for search bar-->
  
  <form id="search">
     <input type="text" id="query" placeholder="Enter search terms here."/>
-    <button>Search</button>
+    <button>Search</button>         
   </form>
   <hr/>
-  <ol>
+  <ol>						<!--ordered list of topics-->
     {{#each topiclist}}
     {{/each}}
   </ol>
@@ -81,21 +81,21 @@
 </template>  
 
 
-<template name="topicview">
+<template name="topicview">     <!--Template per topic, with the different buttons -->
 	<div class="topic">
 		<h4>
-			{{title}} - (Score: {{dislikes}})  
-			<input type="button" class="dislike" value="👎">
+			{{title}} - (Score: {{dislikes}})                <!--from database take title of topic, and "dislikes"-->
+			<input type="button" class="dislike" value="👎">	<!-- button -->
 			<input type="button" class="like" value="👍">
-			{{#if userIsOwner}}
-			<input type="button" class="edit" value="📝">
+			{{#if userIsOwner}}									<!--following buttons are only shown if the current user is the owner -->
+			<input type="button" class="edit" value="📝">  
 			<input type="button" class="remove" value="❌">
 			{{/if}}
 			<input type="button" class="location" value="📍">
-			{{> lmSocialShare opts=socialShareOpts}}
+			{{> lmSocialShare opts=socialShareOpts}}			<!-- FB and Twitter buttons-->
 		</h4>
-		<p>{{description}}</p>
-		<div class="geoDiv" style="display: none;">
+		<p>{{description}}</p>								<!--description from database -->
+			<div class="geoDiv" style="display: none;">		<!--kaart, verstopt (verschijnt bij click op location button, zie .js)-->	
 			<div class="map_canvas"></div>
 		</div>
 	</div>

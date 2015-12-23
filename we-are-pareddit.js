@@ -4,7 +4,7 @@ if (Meteor.isServer) {
 	TopicList._ensureIndex({
 	'title': 'text',
 	'description': 'text'
-	// voegt index toe, momenteel enkel op titel 
+	// voegt index toe, voor search
 	});
 
 	Meteor.publish("search", function(query) {
@@ -41,7 +41,7 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 
 	Template.topiclist.helpers({				//Topiclist helpers
-		'topic': function() {					//from each topic
+		'topic': function() {					//
 			return TopicList.find();
 		}
 	});
@@ -106,19 +106,19 @@ if (Meteor.isClient) {
 
 	Template.editTopicForm.events({					//editTopicForm events
 		'click input[type=button].geo': function (event) {		//when pressing the add location option, this shows the marked location so you can edit it
-			var map = $(event.target).nextAll("div.map_canvas")[0];
+			var map = $(event.target).nextAll("div.map_canvas")[0]; 
 			var loc = $(event.target).prev("input[type=text].geo").val();
 			doGeocoding(map, loc);
 		}
 	});
 
-	Template.newTopic.events({						//newTopic
-		'change input.geoSwitch': function (event) {
-			showMap(event);
+	Template.newTopic.events({								//newTopic events
+		'change input.geoSwitch': function (event) {    	//by clicking the checkbox, calls fucntion
+			showMap(event);									//named function, shows the map to add a custom location
 		},
-		'submit form': function (event) {
-			event.preventDefault();
-			var canvas = $(event.target).find("div.map_canvas")[0];
+		'submit form': function (event) {					//if form is submitted => function
+			event.preventDefault();							//stop standard submit function, instead do ...
+			var canvas = $(event.target).find("div.map_canvas")[0];		
 			TopicList.insert({
 				'title': event.target.topicTitle.value,
 				'description': event.target.topicDescription.value,
