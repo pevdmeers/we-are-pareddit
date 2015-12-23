@@ -160,10 +160,10 @@ if (Meteor.isClient) {
   });
 
 	Template.search.helpers({ 						//search helper function
-	 topiclist: function() {						//returns 
-    Meteor.subscribe("search", Session.get("query"));
-    if (Session.get("query")) {
-      return TopicList.find({}, { sort: [["score", "desc"]] });
+	 topiclist: function() {						
+    Meteor.subscribe("search", Session.get("query"));	//subscribes to the published search function (see server side)
+    if (Session.get("query")) {   						//returns the topiclist, ordered by search score if there is a search query
+      return TopicList.find({}, { sort: [["score", "desc"]] }); 	//if not it returns all topics
     } else {
       return TopicList.find({});
     }
@@ -171,13 +171,13 @@ if (Meteor.isClient) {
 });
  
 
-	function showMap(event, location) {			//maps
+	function showMap(event, location) {			//Function to hide and show maps 
 		var checkbox = $(event.target);
 		var geoDiv = checkbox.nextAll("div.geoDiv");
 		var canvas = geoDiv.children("div.map_canvas")[0];
 		if (checkbox.prop('checked')) {
 			$(geoDiv).show();
-			canvas.googleMap = createMap(canvas);
+			canvas.googleMap = createMap(canvas);		//calls upon createMap function
 			if (location) {
 				createMarkerOnMap(canvas.googleMap, location);
 			} else {
@@ -189,21 +189,20 @@ if (Meteor.isClient) {
 		}
 	}
 
-	function createMap(mapDiv) {				//maps
+	function createMap(mapDiv) {				//creates the map, straight from the class
 		mapDiv.geocoder = new google.maps.Geocoder();
 
-		if(mapDiv.options == undefined){
-			// provide some default initialization options
+		if(mapDiv.options == undefined){ 		// provide some default initialization options, if there are none defined
 			mapDiv.options = 
 			{
 				zoom: 8,
-				center: new google.maps.LatLng(-34.397, 150.644),
+				center: new google.maps.LatLng(50.824739, 4.394029), //centeres on "VUB" tram stop
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
 		}
 
-		var mapObj = new google.maps.Map(mapDiv, mapDiv.options);
-		google.maps.event.addListener(mapObj, "click", createMarkerFunctionForMap(mapObj));
+		var mapObj = new google.maps.Map(mapDiv, mapDiv.options);				//mapObj is variable for location on map user chooses
+		google.maps.event.addListener(mapObj, "click", createMarkerFunctionForMap(mapObj));			//calls upon the create marker function
 		return mapObj;
 	}
 
