@@ -12,4 +12,4 @@ Follow the instructions to run we-are-pareddit locally:
 2. Go to the we-are-pareddit directory 
 3. Run meteor by typing 'meteor' in command line, while in the we-are-pareddit directory
 4. We-are-pareddit will be running at "http://localhost:3000/" as a standard. (stated in the CLI)
-5. Press "sign in" to open the drop down menu, press the red facebook plugin button, and follow facebook instructions to activate the facebook login fanction.
+5. Press "sign in" to open the drop down menu, press the red Facebook plugin button, and follow Facebook instructions to activate the Facebook login function.
