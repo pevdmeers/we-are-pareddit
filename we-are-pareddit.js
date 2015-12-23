@@ -41,21 +41,13 @@ if (Meteor.isServer) {
 	  , access_token_secret:  '6G6lAoPhSKxfU86ZZGacMmqvuR6XmwhLH2CHkjBxtYLrq'
 	});
 
-	T.get('search/tweets', { q: 'weareparis since:2015-11-11', count: 100 }, 
-		Meteor.bindEnvironment(function(err, tweet, response) {
-		 var userName = tweet.user.name;
-		 var userScreenName = tweet.user.screen_name;
-		 var userText = tweet.text;
-		 var tweetDate = tweet.created_at;
-		 var profileImg = tweet.user.profile_image_url;
-		  
-		 console.log(userScreenName + ' (' + userName + ')' + ' said ' + userTweet + ' at ' + tweetDate);
-		 console.log('=======================================')
-		 Tweets.insert({user: userName, userscreen: userScreenName, tweet: userTweet, picture: profileImg, date: tweetDate}, function(error){
-		 if(error)
-		 console.log(error);
-		 });
-	}));
+	var stream = T.stream('statuses/filter', { track: 'weareparis' });
+
+	stream.on('tweet', Meteor.bindEnvironment(function (tweet) {
+	  console.log(tweet);
+	  Tweets.insert(tweet);
+	})
+	);
 
 	Meteor.publish('tweets', function() {
 	 return Tweets.find();
@@ -65,6 +57,12 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 
 	Meteor.subscribe('tweets');
+
+	Template.tweets.helpers({				//Topiclist helpers
+		'tweetje': function() {					//Gives list of all topics
+			return db.tweets.find({'_id':'7EezaRtSm2tMQ9tjq'});			
+		}
+	});
 
 	Template.topiclist.helpers({				//Topiclist helpers
 		'topic': function() {					//Gives list of all topics
