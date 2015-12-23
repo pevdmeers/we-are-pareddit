@@ -1,10 +1,9 @@
 TopicList = new Mongo.Collection("topics");
 
-if (Meteor.isServer) {
-	TopicList._ensureIndex({
+if (Meteor.isServer) {				
+	TopicList._ensureIndex({		// voegt index toe, voor search
 	'title': 'text',
 	'description': 'text'
-	// voegt index toe, voor search
 	});
 
 	Meteor.publish("search", function(query) {
@@ -41,14 +40,14 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 
 	Template.topiclist.helpers({				//Topiclist helpers
-		'topic': function() {					//
-			return TopicList.find();
+		'topic': function() {					//Gives list of all topics
+			return TopicList.find();			
 		}
 	});
 
 
 	Template.topicview.helpers({				//topicview Helpers
-		'userIsOwner': function() {
+		'userIsOwner': function() {				//checks wether user is signed in, and wether he is owner of topic, used in {{#if userIsOwner}}	
 			var user = Meteor.user();
 			if (user) {
 				return this.user == user._id;
@@ -56,8 +55,8 @@ if (Meteor.isClient) {
 				return false;
 			}
 		},
-		'socialShareOpts': function() {
-			var opts = {
+		'socialShareOpts': function() {			//Based on package socialShareOpts, 
+			var opts = {						//we edit it here to turn of pinterest, and give standard share info per topic
 			facebook: true,
 			twitter: true,
 			pinterest: false,
