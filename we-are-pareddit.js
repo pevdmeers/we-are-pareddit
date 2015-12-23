@@ -1,28 +1,28 @@
-TopicList = new Mongo.Collection("topics");
+TopicList = new Mongo.Collection("topics"); //creates database 
 
 if (Meteor.isServer) {				
-	TopicList._ensureIndex({		// voegt index toe, voor search
+	TopicList._ensureIndex({		// Adds index of topics to facilitate search
 		'title': 'text',
 		'description': 'text'
 	});
 
-	Meteor.publish("search", function(query) {	
+	Meteor.publish("search", function(query) {	//publishes search results, on which is subsribed later on
   		if (!query) {
-    		return TopicList.find({});
+    		return TopicList.find({});			//if no search query, give entire topiclist
      	}
-    	console.log("Searching for", query);
+    	console.log("Searching for", query);	
     	var cursor = TopicList.find({ 
     		$text: {
         		$search: query
         	}
       	},
       	{
-        	fields: {
+        	fields: {						
         		score: {
             		$meta: 'textScore'
           		}
         	},
-        	sort: {
+        	sort: {							
           		score: {
             		$meta: 'textScore'
           		}
