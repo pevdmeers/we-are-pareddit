@@ -102,8 +102,8 @@ if (Meteor.isClient) {
 	});
 
 	Template.editTopicForm.events({					//editTopicForm events
-		'click input[type=button].geo': function (event) {		//when pressing the add location option, this shows the marked location so you can edit it
-			var map = $(event.target).nextAll("div.map_canvas")[0]; 
+		'click input[type=button].geo': function (event) {		//when pressing the find location button, 
+			var map = $(event.target).nextAll("div.map_canvas")[0]; 	//it calls upon the function to find a location and mark it on the map
 			var loc = $(event.target).prev("input[type=text].geo").val();
 			doGeocoding(map, loc);
 		}
@@ -120,7 +120,7 @@ if (Meteor.isClient) {
 				'title': event.target.topicTitle.value,
 				'description': event.target.topicDescription.value,
 				'dislikes': 0,
-				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON(),
+				'location': canvas.googleMap && canvas.googleMap.currentLocation.toJSON(),  //saves location
 				'user': Meteor.user()._id
 			});
 			event.target.topicTitle.value = "";				//clears the fields for the user
@@ -177,11 +177,11 @@ if (Meteor.isClient) {
 		var canvas = geoDiv.children("div.map_canvas")[0];
 		if (checkbox.prop('checked')) {
 			$(geoDiv).show();
-			canvas.googleMap = createMap(canvas);		//calls upon createMap function
-			if (location) {
-				createMarkerOnMap(canvas.googleMap, location);
-			} else {
-				getCurrentLocation(canvas.googleMap);
+			canvas.googleMap = createMap(canvas);		//calls upon createMap function and stores resulting map object on div
+			if (location) {								//if we have previously saved location, we make marker on said location
+				createMarkerOnMap(canvas.googleMap, location); 
+			} else {									//if not, we use user locat
+				getCurrentLocation(canvas.googleMap);	
 			}
 		} else {
 			$(geoDiv).hide();
@@ -202,11 +202,11 @@ if (Meteor.isClient) {
 		}
 
 		var mapObj = new google.maps.Map(mapDiv, mapDiv.options);				//here we initialize the map
-		google.maps.event.addListener(mapObj, "click", createMarkerFunctionForMap(mapObj));			//calls upon the create marker function when the map is clicked
+		google.maps.event.addListener(mapObj, "click", createMarkerFunctionForMap(mapObj));			//calls upon the createMarkerOnMap function when the map is clicked
 		return mapObj;												
 	}
 
-	function createMarkerFunctionForMap(mapObj) {		//This function returns a function that uses the mapObj
+	function createMarkerFunctionForMap(mapObj) {		//This function returns a function that uses the mapObj so we can use it later to create a marker
 		return function (event) {						
 			createMarkerOnMap(mapObj, event.latLng);	//calls upon createMarkerOnMap
 		};
@@ -221,14 +221,14 @@ if (Meteor.isClient) {
 					position: loc,
 					title: "NEW MARKER"
 				});	
-			mapObj.panTo(loc);								
-			mapObj.currentLocation = loc;
+			mapObj.panTo(loc);								//centers map
+			mapObj.currentLocation = loc;					//stores location in mapObj for later use
 	}
 
 
-	function getCurrentLocation(map) {					//maps
+	function getCurrentLocation(map) {					// copied from lecture
 
-		var onError = function(error) {
+		var onError = function(error) {					
 			alert("Could not get the current location.");
 		};
 
@@ -244,7 +244,7 @@ if (Meteor.isClient) {
 						// you may also want to adjust the zoom level
 
 						map.panTo(currentLocation);
-						map.currentLocation = currentLocation;
+						map.currentLocation = currentLocation;    //puts current location on map object
 
 						// remember that the map object was already initialised for you in createMap()
 						// you can use it like this: map.whateverFunction() 
@@ -259,7 +259,7 @@ if (Meteor.isClient) {
 		}
 	}
 
-	function doGeocoding(map, loc){					//maps
+	function doGeocoding(map, loc){					//Instead of getting the value from the textfield, we here pass it to the function
 
 		var geocoderRequest = {
 			address: loc
@@ -271,15 +271,15 @@ if (Meteor.isClient) {
 				// results is an array of GeocoderResult objects. Using only results[0] is sufficient
 				// check the documentation to see what a GeocoderResult object looks like:
 				// https://developers.google.com/maps/documentation/javascript/reference#GeocoderResult
-				// use it to set the map to the returned location, similar to what you did in question 1
+				// use it to set the map to the returned location
 
 				var position = results[0];
-				createMarkerOnMap(map.googleMap, position.geometry.location);
+				createMarkerOnMap(map.googleMap, position.geometry.location); //calls upon the createMarkerOnMap function, defined earlier
 			}
 		});
 	}
 
-	$.ajax({										//ajax to make map dynamic
+	$.ajax({										//load library of google maps
 		url: "http://maps.google.com/maps/api/js?sensor=false",
 		dataType: "script"
 	});
