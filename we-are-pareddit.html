@@ -24,8 +24,9 @@
 		{{> newTopic}}
 	{{/if}}
 
+	{{> search}}	
   {{> topiclist}}
-  {{> search}}
+  
 
   </body>
 
@@ -71,11 +72,9 @@
     <input type="text" id="query" placeholder="Enter search terms here."/>
     <button>Search</button>
   </form>
-  <hr/> 
-<h1>Topics</h1>
+  <hr/>
   <ol>
     {{#each topiclist}}
-      <li>{{> topicview}}</li>
     {{/each}}
   </ol>
 

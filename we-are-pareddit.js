@@ -1,5 +1,43 @@
 TopicList = new Mongo.Collection("topics");
 
+if (Meteor.isServer) {
+	TopicList._ensureIndex({
+	'title': 'text',
+	'description': 'text'
+	// voegt index toe, momenteel enkel op titel 
+	});
+
+	Meteor.publish("search", function(query) {
+  if (!query) {
+    return TopicList.find({});
+     }
+     console.log("Searching for", query);
+     var cursor = TopicList.find(
+      { $text: {
+          $search: query
+        }
+      },
+      {
+        fields: {
+          score: {
+            $meta: 'textScore'
+          }
+        },
+        sort: {
+          score: {
+            $meta: 'textScore'
+          }
+        }
+      }
+    );
+     return cursor;
+
+});
+}
+
+
+
+
 if (Meteor.isClient) {
 
 	Template.topiclist.helpers({
@@ -117,6 +155,25 @@ if (Meteor.isClient) {
 			$(form).parent().addClass("hidden");
 		}
 	});
+	
+	Template.search.events({
+    "submit #search": function (e) {
+      e.preventDefault();
+      Session.set("query", $("#query").val());
+    }
+  });
+
+	Template.search.helpers({
+	 topiclist: function() {
+    Meteor.subscribe("search", Session.get("query"));
+    if (Session.get("query")) {
+      return TopicList.find({}, { sort: [["score", "desc"]] });
+    } else {
+      return TopicList.find({});
+    }
+  }
+});
+ 
 
 	function showMap(event, location) {
 		var checkbox = $(event.target);
@@ -230,61 +287,8 @@ if (Meteor.isClient) {
 		url: "http://maps.google.com/maps/api/js?sensor=false",
 		dataType: "script"
 	});
-	Template.search.events({
-    "submit #search": function (e) {
-      e.preventDefault();
-      Session.set("query", $("#query").val());
-    }
-  });
 
-	Template.search.helpers({
-	 topiclist: function() {
-    Meteor.subscribe("search", Session.get("query"));
-    if (Session.get("query")) {
-      return TopicList.find({}, { sort: [["score", "desc"]] });
-    } else {
-      return TopicList.find({});
-    }
-  }
-});
- 
-
-if (Meteor.isServer) {
-	TopicList._ensureIndex({
-'title': 'text',
-'description': 'text'
-	// voegt index toe, momenteel enkel op titel 
-	});
-
-	Meteor.publish("search", function(query) {
-  if (!query) {
-    return TopicList.find({});
-     }
-     console.log("Searching for", query);
-     var cursor = TopicList.find(
-      { $text: {
-          $search: query
-        }
-      },
-      {
-        fields: {
-          score: {
-            $meta: 'textScore'
-          }
-        },
-        sort: {
-          score: {
-            $meta: 'textScore'
-          }
-        }
-      }
-    );
-     return cursor;
-
-});
 }
-}
-
 	/*
 		 Meteor.startup(function () {
 	// code to run on server at startup
