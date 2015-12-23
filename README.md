@@ -4,7 +4,7 @@ Follow the instructions to run we-are-pareddit locally:
 
 1. Download meteor  
   In command line: type  
-    curl https://install.meteor.com/ | sh  
+  `curl https://install.meteor.com/ | sh`
   This will:
   1. Connect to ‘install.meteor.com’.
   2. Download the latest version of Meteor. 
