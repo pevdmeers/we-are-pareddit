@@ -1,4 +1,5 @@
 TopicList = new Mongo.Collection("topics");
+Tweets = new Mongo.Collection("tweets");
 
 if (Meteor.isServer) {				
 	TopicList._ensureIndex({		// voegt index toe, voor search
@@ -32,12 +33,38 @@ if (Meteor.isServer) {
      return cursor;
 
 });
+
+	var T = new Twit({
+	    consumer_key:         'TObqQNMfUn6ce4ULo0lRoXWDH'
+	  , consumer_secret:      '1A4aObhEVvw5bjG17ndFaKb08NDAxhPXlL3F1VQgHhINmLYiUV'
+	  , access_token:         '2862255635-vZsjAGU03tw29Xq7109RbZujYeDMWo0P2gfSxO1'
+	  , access_token_secret:  '6G6lAoPhSKxfU86ZZGacMmqvuR6XmwhLH2CHkjBxtYLrq'
+	});
+
+	T.get('search/tweets', { q: 'weareparis since:2015-11-11', count: 100 }, 
+		Meteor.bindEnvironment(function(err, tweet, response) {
+		 var userName = tweet.user.name;
+		 var userScreenName = tweet.user.screen_name;
+		 var userText = tweet.text;
+		 var tweetDate = tweet.created_at;
+		 var profileImg = tweet.user.profile_image_url;
+		  
+		 console.log(userScreenName + ' (' + userName + ')' + ' said ' + userTweet + ' at ' + tweetDate);
+		 console.log('=======================================')
+		 Tweets.insert({user: userName, userscreen: userScreenName, tweet: userTweet, picture: profileImg, date: tweetDate}, function(error){
+		 if(error)
+		 console.log(error);
+		 });
+	}));
+
+	Meteor.publish('tweets', function() {
+	 return Tweets.find();
+	});
 }
 
-
-
-
 if (Meteor.isClient) {
+
+	Meteor.subscribe('tweets');
 
 	Template.topiclist.helpers({				//Topiclist helpers
 		'topic': function() {					//Gives list of all topics
